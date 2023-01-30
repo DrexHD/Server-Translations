@@ -22,12 +22,12 @@ public final class SystemDelegatedLanguage extends Language {
     }
 
     @Override
-    public String get(String key) {
+    public String get(String key, String fallback) {
         String override = this.getSystemLanguage().local().getOrNull(key);
         if (override != null) {
             return override;
         }
-        return this.vanilla.get(key);
+        return this.vanilla.get(key, fallback);
     }
 
     @Override

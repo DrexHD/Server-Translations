@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class LanguageMixin {
     @ModifyVariable(method = "setInstance", at = @At("HEAD"), argsOnly = true)
     private static Language modifyLanguage(Language language) {
-        String languageCode = MinecraftClient.getInstance().getLanguageManager().getLanguage().getCode();
+        String languageCode = MinecraftClient.getInstance().getLanguageManager().getLanguage();
         ServerLanguageDefinition languageDefinition = ServerTranslations.INSTANCE.getLanguageDefinition(languageCode);
         ServerTranslations.INSTANCE.setSystemLanguage(languageDefinition);
 
