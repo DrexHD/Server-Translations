@@ -1,5 +1,6 @@
 package xyz.nucleoid.server.translations.mixin.packet;
 
+import net.minecraft.nbt.NbtElement;
 import xyz.nucleoid.server.translations.api.LocalizationTarget;
 import xyz.nucleoid.server.translations.impl.nbt.StackNbtLocalizer;
 import net.minecraft.item.Item;
@@ -23,7 +24,7 @@ public class PacketByteBufMixin {
             method = "writeItemStack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/network/PacketByteBuf;writeNbt(Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/network/PacketByteBuf;",
+                    target = "Lnet/minecraft/network/PacketByteBuf;writeNbt(Lnet/minecraft/nbt/NbtElement;)Lnet/minecraft/network/PacketByteBuf;",
                     shift = At.Shift.BEFORE
             )
     )
@@ -35,13 +36,13 @@ public class PacketByteBufMixin {
             method = "writeItemStack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/network/PacketByteBuf;writeNbt(Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/network/PacketByteBuf;"
+                    target = "Lnet/minecraft/network/PacketByteBuf;writeNbt(Lnet/minecraft/nbt/NbtElement;)Lnet/minecraft/network/PacketByteBuf;"
             )
     )
-    private NbtCompound stapi$writeItemStackTag(NbtCompound tag) {
+    private NbtElement stapi$writeItemStackTag(NbtElement tag) {
         LocalizationTarget target = LocalizationTarget.forPacket();
         if (target != null) {
-            tag = StackNbtLocalizer.localize(this.stapi$cachedStack, tag, target);
+            tag = StackNbtLocalizer.localize(this.stapi$cachedStack, (NbtCompound) tag, target);
         }
         this.stapi$cachedStack = null;
 
