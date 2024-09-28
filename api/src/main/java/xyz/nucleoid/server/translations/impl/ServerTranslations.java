@@ -157,23 +157,23 @@ public final class ServerTranslations implements IdentifiableResourceReloadListe
     }
 
     @Override
-    public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+    public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Executor prepareExecutor, Executor applyExecutor) {
         CompletableFuture<Multimap<String, Supplier<TranslationMap>>> future = CompletableFuture.supplyAsync(() -> {
             this.reload();
             return LanguageReader.collectDataPackTranslations(manager);
         });
 
         return future.thenCompose(synchronizer::whenPrepared)
-                .thenAcceptAsync(v -> {
-                    Multimap<String, Supplier<TranslationMap>> languageSuppliers = future.join();
-                    languageSuppliers.forEach(this.translations::add);
+            .thenAcceptAsync(v -> {
+                Multimap<String, Supplier<TranslationMap>> languageSuppliers = future.join();
+                languageSuppliers.forEach(this.translations::add);
 
-                    int keyCount = ServerTranslations.INSTANCE.getTranslationKeyCount();
-                    LOGGER.info(Text.translatable("text.translated_server.loaded.translation_key", String.valueOf(keyCount)).getString());
+                int keyCount = ServerTranslations.INSTANCE.getTranslationKeyCount();
+                LOGGER.info(Text.translatable("text.translated_server.loaded.translation_key", String.valueOf(keyCount)).getString());
 
-                    //System.out.println(LocalizableText.asLocalizedFor(
-                    //        Text.translatable("text.translated_server.loaded.translation_key"), ServerLanguage.getLanguage("en_us")).getContent() instanceof TranslatableTextContent t ? t.getFallback() : "[FAIL]");
-                });
+                //System.out.println(LocalizableText.asLocalizedFor(
+                //        Text.translatable("text.translated_server.loaded.translation_key"), ServerLanguage.getLanguage("en_us")).getContent() instanceof TranslatableTextContent t ? t.getFallback() : "[FAIL]");
+            });
     }
 
     @Override
